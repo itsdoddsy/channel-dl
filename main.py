@@ -7,11 +7,11 @@ YOUTUBE_VIDEO_URL = 'https://www.youtube.com/watch?v='
 GOOGLE_API_URL = 'https://www.googleapis.com/youtube/v3/search?part=snippet&channelId={}&maxResults=3&order=date&type=video&key={}'
 API_KEY = ''
 
-PLAYLIST_LIST = json.load(open('channels.json', 'r'))
+CHANNEL_LIST = json.load(open('channels.json', 'r'))
 
 __here__ = os.getcwd() + '\\'
 
-def DownloadVideo(url, folder):
+def download_video(url, folder):
     ydl_options = {
         'format': 'bestaudio/best',
         'postprocessors': [{
@@ -27,8 +27,8 @@ def DownloadVideo(url, folder):
         ydl.extract_info(YOUTUBE_VIDEO_URL+url, download=True)
 
 
-for channel in PLAYLIST_LIST.values():
+for channel in CHANNEL_LIST.values():
     r = requests.get(GOOGLE_API_URL.format(channel[0]['url'], API_KEY))
     recentsongs = json.loads(r.text)['items']
     for songs in recentsongs:
-        DownloadVideo(songs['id']['videoId'], channel[0]['folder'])
+        download_video(songs['id']['videoId'], channel[0]['folder'])
